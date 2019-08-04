@@ -1,0 +1,219 @@
+Notes created from https://www.tutorialspoint.com/unix/shell_scripting.htm
+
+1. It is good to mention the information of the script with # comments
+# Author: QAD
+# Script systemInformation.sh is used to gather the System Information Data
+#!/bin/bash
+
+2. Variables:
+The name of a variable can contain only letters (a to z or A to Z), numbers ( 0 to 9) or the underscore character ( _).
+By convention, Unix shell variables will have their names in UPPERCASE.
+Ex. DIR_NAME = "/pxn001/SystemInformation"
+
+3. Access variables using $ sign. readonly VARIABLE_NAME >this makes the variable as a constant.
+Ex. echo $DIR_NAME
+
+4. Local Variables − A local variable is a variable that is present within the current instance of the shell. It is not available to programs that are started by the shell.
+   Environment Variables − An environment variable is available to any child process of the shell. Some programs need environment variables in order to function correctly.
+   Shell Variables − A shell variable is a special variable that is set by the shell and is required by the shell in order to function correctly. 
+ 
+5. Exit Status: The $? variable represents the exit status of the previous command.
+   Exit status is a numerical value returned by every command upon its completion.
+   As a rule, most commands return an exit status of 0 if they were successful, and 1 if they were unsuccessful.
+Ex. $echo $?
+
+6. Array: Shell supports a different type of variable called an array variable.
+Create array> array_name=(value1 value2 ... valueN)
+Retrieve Element of array> ${array_name[index]}
+Retrieve All Elements of array> ${array_name[*]}   OR     ${array_name[@]}
+Ex.
+NAME[0]="Zara"
+NAME[1]="Qadir"
+NAME[2]="Mahnaz"
+echo "First Method: ${NAME[*]}"  =====> First Method: Zara Qadir Mahnaz
+
+7. Arithmetic Operators: It uses external programs, either awk or expr.
+There must be spaces between operators and expressions.
+The complete expression should be enclosed between ‘ ‘.
+Ex.
+val=`expr 2 + 2`
+echo "Total value : $val" =====> Total value : 4
+
+8. Conditional expressions: == (Equality) & != (Not Equality)
+All the conditional expressions should be inside square braces with spaces around them.
+Ex. [ $a == $b ]
+
+9. Boolean Operators: Ex: a=10 & b=20
+!	This is logical negation. Ex: [ ! false ] is true.
+-o	This is logical OR. Ex. [ $a -lt 20 -o $b -gt 100 ] is true.
+-a	This is logical AND. Ex. [ $a -lt 20 -a $b -gt 100 ] is false.
+
+10. String Operators: Ex. a holds "abc" and variable b holds "efg"
+-z	Checks if the given string operand size is zero. Ex. [ -z $a ] is not true.
+-n	Checks if the given string operand size is non-zero. Ex. [ -n $a ] is not false.
+str	Checks if str is not the empty string. Ex. [ $a ] is not false.
+
+11. if...else statements:
+If else statements are useful decision-making statements which can be used to select an option from a given set of options.
+Unix Shell supports following forms of if…else statement −
+if...fi statement
+if...else...fi statement
+if...elif...else...fi statement
+
+12. case...esac Statement:
+case...esac statement in the Unix shell is very similar to the switch...case statement.
+
+13. Loop Types: All the loops support nesting concept.
+The while loop | The for loop | The until loop | The select loop
+Ex.
+a=0
+while [ "$a" -lt 10 ]    # this is loop1
+do
+   b="$a"
+   while [ "$b" -ge 0 ]  # this is loop2
+   do
+      echo -n "$b "
+      b=`expr $b - 1`
+   done
+   echo
+   a=`expr $a + 1`
+done
+
+14. The break statement | The continue statement:
+break n | continue n => n specifies the nth enclosing loop
+Ex.
+for NUM in $NUMS
+do
+   Q=`expr $NUM % 2`
+   if [ $Q -eq 0 ]
+   then
+      echo "Number is an even number!!"
+      continue
+   fi
+   echo "Found odd number"
+done
+
+15. Substitution: Shell performs substitution when it encounters an expression that contains one or more special characters.
+"\n" is substituted by a new line & the -e option enables the interpretation of backslash escapes.
+Ex. a=10
+echo -e "Value of a is $a \n" ========> Value of a is 10
+
+16. Command Substitution: Command substitution is the mechanism by which the shell performs a given set of commands and then substitutes their output in the place of the commands.
+Ex. DATE=`date`
+echo "Date is $DATE"  =========> Date is Thu Jul  2 03:59:57 MST 2009
+
+17. Variable Substitution: Variable substitution enables the shell programmer to manipulate the value of a variable based on its state.
+${var} :Substitute the value of var.
+${var:-word} :If var is null or unset, word is substituted for var. The value of var does not change.
+${var:=word} :If var is null or unset, var is set to the value of word.
+${var:?message} :If var is null or unset, message is printed to standard error. This checks that variables are set correctly.
+Ex.
+echo ${var:-"Variable is not set"}
+echo "1 - Value of var is ${var}"
+========> 
+Variable is not set
+1 - Value of var is
+
+18. Metacharacters: 
+* ? [ ] ' " \ $ ; & ( ) | ^ < > new-line space tab ===> use \ before them to print.
+Ex. echo Hello\; Word ======> Hello; Word
+
+19. Output Redirection: If the notation > file is appended to any command that normally writes its output to standard output, the output will be written to file not terminal.
+Ex. who > users
+cat users =====> oko         tty01   Sep 12 07:30
+
+20. Input Redirection: less-than character < is used to redirect the input of a command.
+Same but reverse to above.
+
+21. Here Document: here document is used to redirect input into an interactive shell script or program.
+Shell interprets the << operator as an instruction to read input until it finds a line containing the specified delimiter.
+Ex. wc -l to count the total number of lines 
+$wc -l << EOF
+   This is a simple lookup program 
+	for good (and bad) restaurants
+	in Cape Town.
+EOF
+3
+
+22. Discard the output: Sometimes you will need to execute a command, but you don't want the output displayed on the screen. You can discard the output by redirecting it to the file /dev/null. command > /dev/null
+
+23. Creating Functions: 
+function_name () { 
+   list of commands
+}
+Ex.
+# Define your function here
+Hello () {
+   echo "Hello World"
+}
+# Invoke your function
+Hello
+=======> 
+$./test.sh
+Hello World
+
+24. Pass Parameters to a Function: Parameters would be represented by $1, $2 and so on.
+# Define your function here
+Hello () {
+   echo "Hello World $1 $2"
+}
+# Invoke your function
+Hello Zara Ali
+=======>
+$./test.sh
+Hello World Zara Ali
+
+
+25. Returning Values from Functions: You can return any value from your function using the return command. return code
+# Define your function here
+Hello () {
+   echo "Hello World $1 $2"
+   return 10
+}
+# Invoke your function
+Hello Zara Ali
+# Capture value returnd by last command
+ret=$?
+echo "Return value is $ret"
+=======>
+$./test.sh
+Hello World Zara Ali
+Return value is 10
+
+26. Nested Functions: Functions can call themselves and also other functions.
+Ex.
+# Calling one function from another
+number_one () {
+   echo "This is the first function speaking..."
+   number_two
+}
+number_two () {
+   echo "This is now the second function speaking..."
+}
+# Calling function one.
+number_one
+===========> 
+This is the first function speaking...
+This is now the second function speaking...
+
+27. Function Call from Prompt: You can put definitions for commonly used functions inside your .profile.
+These definitions will be available whenever you log in and you can use them at the command prompt.
+Ex.
+$. test.sh
+$ number_one
+==========>
+This is the first function speaking...
+This is now the second function speaking...
+
+29. .f option: To remove the definition of a function from the shell, use the unset command with the .f option. This command is also used to remove the definition of a variable to the shell.
+Ex. 
+$ unset -f function_name
+
+29. Help: Unix's version of Help files are called man pages.
+$man command
+
+===========================================>>>>
+If you get any error or have edited script on windows:   /bin/bash^M: bad interpreter: No such file or directory
+sed -i -e 's/\r$//' script_file.sh
+
+
