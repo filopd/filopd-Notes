@@ -1,7 +1,7 @@
 Notes created from https://www.tutorialspoint.com/unix/shell_scripting.htm
 
 1. It is good to mention the information of the script with # comments
-# Author: QAD
+# Author: Priyesh
 # Script systemInformation.sh is used to gather the System Information Data
 #!/bin/bash
 
